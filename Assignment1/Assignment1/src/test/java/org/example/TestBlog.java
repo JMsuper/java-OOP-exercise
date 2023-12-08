@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class TestBlog {
 
@@ -103,4 +104,37 @@ public class TestBlog {
         assertEquals(post1,postList.get(1));
         assertEquals(post2,postList.get(0));
     }
+
+    @Test
+    void testSetTagFilter(){
+        Blog blog = new Blog();
+        HashSet<String> tagFilter =  new HashSet<>();
+        tagFilter.add("hello");
+        tagFilter.add("world");
+        blog.setTagFilter(tagFilter);
+        assertEquals(tagFilter,blog.getTagFilter());
+        assertTrue(blog.getTagFilter().contains("hello"));
+        assertTrue(blog.getTagFilter().contains("world"));
+    }
+
+    @Test
+    void testSetAuthorFilter(){
+        Blog blog = new Blog();
+        HashSet<User> authorFilter = new HashSet<>();
+        User author1 = new User("document");
+        User author2 = new User("CS");
+        authorFilter.add(author1);
+        authorFilter.add(author2);
+        blog.setAuthorFilter(authorFilter);
+        assertEquals(authorFilter,blog.getAuthorFilter());
+        assertTrue(blog.getAuthorFilter().contains(author1));
+        assertTrue(blog.getAuthorFilter().contains(author2));
+    }
+
+    // todo
+    @Test
+    void testFilterWithTagAndAuthor(){
+
+    }
+
 }

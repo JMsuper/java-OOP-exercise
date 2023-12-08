@@ -7,6 +7,8 @@ import java.util.HashSet;
 
 public class Blog {
     private HashSet<Post> posts;
+    private HashSet<String> tagFilter;
+    private HashSet<User> authorFilter;
     private PostOrderType postOrder;
 
     public Blog(){
@@ -22,8 +24,24 @@ public class Blog {
         this.postOrder = postOrder;
     }
 
+    public void setTagFilter(HashSet<String> tagFilter) {
+        this.tagFilter = tagFilter;
+    }
+
+    public void setAuthorFilter(HashSet<User> authorFilter){
+        this.authorFilter = authorFilter;
+    }
+
+    public HashSet<String> getTagFilter() {
+        return tagFilter;
+    }
+
+    public HashSet<User> getAuthorFilter() {
+        return authorFilter;
+    }
+
     public ArrayList<Post> getPostList() {
-        ArrayList postList = new ArrayList(this.posts);
+        ArrayList<Post> postList = new ArrayList<>(this.posts);
         sortByPostOrder(postList);
         return postList;
     }
@@ -31,19 +49,19 @@ public class Blog {
     private void sortByPostOrder(ArrayList<Post> postList){
         switch (postOrder){
             case TITLE_ACES:
-                Collections.sort(postList, Comparator.comparing(Post::getTitle));
+                postList.sort(Comparator.comparing(Post::getTitle));
             case CREATED_ACES:
-                Collections.sort(postList, Comparator.comparing(Post::getCreatedTime));
+                postList.sort(Comparator.comparing(Post::getCreatedTime));
                 break;
             case CREATED_DESC:
-                Collections.sort(postList, Comparator.comparing(Post::getCreatedTime));
+                postList.sort(Comparator.comparing(Post::getCreatedTime));
                 Collections.reverse(postList);
                 break;
             case EDITED_ACES:
-                Collections.sort(postList, Comparator.comparing(Post::getEditedTime));
+                postList.sort(Comparator.comparing(Post::getEditedTime));
                 break;
             case EDITED_DESC:
-                Collections.sort(postList, Comparator.comparing(Post::getEditedTime));
+                postList.sort(Comparator.comparing(Post::getEditedTime));
                 Collections.reverse(postList);
                 break;
             default:

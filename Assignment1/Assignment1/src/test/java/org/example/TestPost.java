@@ -30,5 +30,12 @@ public class TestPost {
         assertTrue(before.isBefore(after));
     }
 
+    @Test
+    void testAddTag(){
+        Post post = new Post("123","!@3","!23");
+        post.addTag("hello");
+        assertTrue(post.getTags().contains("hello"));
+    }
+
 
 }
