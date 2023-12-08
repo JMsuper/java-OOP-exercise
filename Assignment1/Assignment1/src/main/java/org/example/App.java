@@ -11,12 +11,12 @@ public class App {
 //        registry.registerTagFilterSetter("...","..."); // 태그 필터 설정 메서드
 //        registry.registerAuthorFilterSetter("...","..."); // 작성자 필터 설정 메서드
 
-//        registry.registerPostOrderSetter("...","..."); // 블로그 글의 정렬 방법 설정 메서드
+        registry.registerPostOrderSetter("...","..."); // 블로그 글의 정렬 방법 설정 메서드
         registry.registerPostListGetter("Blog","getPostList"); // 블로그 글 목록을 가져오는 메서드
         registry.registerPostAdder("Blog","addPost"); // 블로그 글을 추가하는 메서드
 
-//        registry.registerPostTitleUpdater("...","..."); // 발행된 블로그 글의 제목을 수정하는 메서드
-//        registry.registerPostBodyUpdater("...","..."); // 발행된 블로그 글의 본문을 수정하는 메서드
+        registry.registerPostTitleUpdater("...","..."); // 발행된 블로그 글의 제목을 수정하는 메서드
+        registry.registerPostBodyUpdater("...","..."); // 발행된 블로그 글의 본문을 수정하는 메서드
 //        registry.registerPostTagAdder("...","..."); // 블로그 글에 태그를 추가하는 메서드
 //        registry.registerCommentAdder("...","..."); // 블로그 글에 댓글을 추가하는 메서드
 //
