@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 public class Blog {
     private HashSet<Post> posts;
@@ -41,10 +42,32 @@ public class Blog {
     }
 
     public ArrayList<Post> getPostList() {
-        ArrayList<Post> postList = new ArrayList<>(this.posts);
+        ArrayList<Post> postList = new ArrayList<>(filter());
         sortByPostOrder(postList);
         return postList;
     }
+
+    public HashSet<Post> filter(){
+        return filterWithTag(filterWithAuthor(this.posts));
+    }
+
+    private HashSet<Post> filterWithTag(HashSet<Post> postList){
+        if(tagFilter == null || tagFilter.size() == 0){
+            return postList;
+        }
+
+        return (HashSet<Post>) postList.stream().filter(post -> post.containsAnyTags(this.tagFilter))
+                .collect(Collectors.toSet());
+    }
+
+    private HashSet<Post> filterWithAuthor(HashSet<Post> postList){
+        if(authorFilter == null || authorFilter.size() == 0){
+            return postList;
+        }
+        return (HashSet<Post>) postList.stream().filter(post -> post.checkAuthor(this.authorFilter))
+                .collect(Collectors.toSet());
+    }
+
 
     private void sortByPostOrder(ArrayList<Post> postList){
         switch (postOrder){

@@ -2,6 +2,7 @@ package org.example;
 
 import java.time.OffsetDateTime;
 import java.util.HashSet;
+import java.util.List;
 
 public class Post {
     private User author;
@@ -15,7 +16,7 @@ public class Post {
         this(title,"","");
     }
 
-    public Post(String author,String title,String body){
+    public Post(String title,String author,String body){
         this.author = new User(author);
         this.title = title;
         this.body = body;
@@ -44,6 +45,7 @@ public class Post {
         return editedTime;
     }
 
+
     public void addTag(String tag){
         this.tags.add(tag);
     }
@@ -56,5 +58,13 @@ public class Post {
     public void updateBody(String body) {
         this.body = body;
         this.editedTime = OffsetDateTime.now();
+    }
+
+    public boolean checkAuthor(HashSet<User> users){
+        return users.contains(this.author);
+    }
+
+    public boolean containsAnyTags(HashSet<String> tags){
+        return this.tags.stream().anyMatch(tags::contains);
     }
 }

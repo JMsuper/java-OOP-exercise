@@ -2,11 +2,14 @@ package org.example;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestBlog {
 
@@ -65,9 +68,9 @@ public class TestBlog {
     void testGetPostOrderByTITLE_ACES(){
         Blog blog = new Blog();
         blog.setPostOrder(PostOrderType.TITLE_ACES);
-        Post post1 = new Post("post1","hello112","test Body");
+        Post post1 = new Post("hello112","post1","test Body");
         blog.addPost(post1);
-        Post post2 = new Post("post1","hello111","test Body");
+        Post post2 = new Post("hello111","post2","test Body");
         blog.addPost(post2);
 
         ArrayList<Post> postList = blog.getPostList();
@@ -131,10 +134,23 @@ public class TestBlog {
         assertTrue(blog.getAuthorFilter().contains(author2));
     }
 
-    // todo
     @Test
-    void testFilterWithTagAndAuthor(){
+    void testFilter(){
+        Blog blog = new Blog();
+        Post post1 = new Post("test","Mike","sdf");
+        post1.addTag("Hello");
+        Post post2 = new Post("test","John","sdf");
+        post2.addTag("Hello");
+        blog.addPost(post1);
+        blog.addPost(post2);
+        blog.setTagFilter(new HashSet<>(Arrays.asList("Hello","Hi")));
 
+        HashSet<User> authorFilter = new HashSet<>();
+        authorFilter.add(new User("Mike"));
+        blog.setAuthorFilter(authorFilter);
+        ArrayList<Post> result = new ArrayList<>(blog.filter());
+        Post postActual = result.get(0);
+
+        assertTrue(postActual == post1);
     }
-
 }

@@ -8,8 +8,8 @@ public class App {
         // registry.registerPostAdder("Foo", "bar");
 
         registry.registerBlogCreator("Blog"); // 블로그를 생성하는 생성자
-        registry.registerTagFilterSetter("...","..."); // 태그 필터 설정 메서드
-        registry.registerAuthorFilterSetter("...","..."); // 작성자 필터 설정 메서드
+        registry.registerTagFilterSetter("Blog","setTagFilter"); // 태그 필터 설정 메서드
+        registry.registerAuthorFilterSetter("Blog","setAuthorFilter"); // 작성자 필터 설정 메서드
 
         registry.registerPostOrderSetter("Blog","setPostOrder"); // 블로그 글의 정렬 방법 설정 메서드
         registry.registerPostListGetter("Blog","getPostList"); // 블로그 글 목록을 가져오는 메서드
@@ -17,7 +17,7 @@ public class App {
 
         registry.registerPostTitleUpdater("Post","updateTitle"); // 발행된 블로그 글의 제목을 수정하는 메서드
         registry.registerPostBodyUpdater("Post","updateBody"); // 발행된 블로그 글의 본문을 수정하는 메서드
-        registry.registerPostTagAdder("...","..."); // 블로그 글에 태그를 추가하는 메서드
+        registry.registerPostTagAdder("Post","addTag"); // 블로그 글에 태그를 추가하는 메서드
 //        registry.registerCommentAdder("...","..."); // 블로그 글에 댓글을 추가하는 메서드
 //
 //        registry.registerCommentUpdater("...","..."); // 댓글에 내용을 수정하는 메서드
