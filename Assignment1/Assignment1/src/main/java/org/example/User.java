@@ -3,14 +3,20 @@ package org.example;
 import java.util.Objects;
 
 public class User {
-    private String name;
+    // member variable
+    private final String name;
+
+
+    // Constructor
     public User(String name){
         this.name = name;
     }
 
+
+    // Method
     @Override
     public boolean equals(Object object){
-        if (object.getClass() != User.class){
+        if ((object == null) || (object.getClass() != User.class)){
             return false;
         }
         User otherUser = (User) object;
@@ -21,6 +27,4 @@ public class User {
     public int hashCode(){
         return Objects.hash(name);
     }
-
-
 }

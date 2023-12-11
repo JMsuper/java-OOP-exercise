@@ -1,22 +1,24 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Blog {
-    private HashSet<Post> posts;
+    // member variable
+    private final HashSet<Post> posts;
     private HashSet<String> tagFilter;
     private HashSet<User> authorFilter;
     private PostOrderType postOrder;
 
+
+    // Constructor
     public Blog(){
         this.postOrder = PostOrderType.CREATED_DESC;
         this.posts = new HashSet<>();
     }
 
+
+    // Methods
     public PostOrderType getPostOrder(){
         return this.postOrder;
     }
@@ -25,34 +27,34 @@ public class Blog {
         this.postOrder = postOrder;
     }
 
-    public void setTagFilter(HashSet<String> tagFilter) {
-        this.tagFilter = tagFilter;
+    public void setTagFilter(Set<String> tagFilter) {
+        this.tagFilter = (HashSet<String>) tagFilter;
     }
 
-    public void setAuthorFilter(HashSet<User> authorFilter){
-        this.authorFilter = authorFilter;
+    public void setAuthorFilter(Set<User> authorFilter){
+        this.authorFilter = (HashSet<User>) authorFilter;
     }
 
-    public HashSet<String> getTagFilter() {
+    public Set<String> getTagFilter() {
         return tagFilter;
     }
 
-    public HashSet<User> getAuthorFilter() {
+    public Set<User> getAuthorFilter() {
         return authorFilter;
     }
 
-    public ArrayList<Post> getPostList() {
+    public List<Post> getPostList() {
         ArrayList<Post> postList = new ArrayList<>(filter());
         sortByPostOrder(postList);
         return postList;
     }
 
-    public HashSet<Post> filter(){
+    public Set<Post> filter(){
         return filterWithTag(filterWithAuthor(this.posts));
     }
 
     private HashSet<Post> filterWithTag(HashSet<Post> postList){
-        if(tagFilter == null || tagFilter.size() == 0){
+        if(tagFilter == null || tagFilter.isEmpty()){
             return postList;
         }
 
@@ -61,7 +63,7 @@ public class Blog {
     }
 
     private HashSet<Post> filterWithAuthor(HashSet<Post> postList){
-        if(authorFilter == null || authorFilter.size() == 0){
+        if(authorFilter == null || authorFilter.isEmpty()){
             return postList;
         }
         return (HashSet<Post>) postList.stream().filter(post -> post.checkAuthor(this.authorFilter))
@@ -73,6 +75,7 @@ public class Blog {
         switch (postOrder){
             case TITLE_ACES:
                 postList.sort(Comparator.comparing(Post::getTitle));
+                break;
             case CREATED_ACES:
                 postList.sort(Comparator.comparing(Post::getCreatedTime));
                 break;

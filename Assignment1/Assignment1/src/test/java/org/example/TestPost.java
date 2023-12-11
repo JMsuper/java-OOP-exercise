@@ -2,18 +2,13 @@ package org.example;
 
 import org.junit.jupiter.api.Test;
 
-import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestPost {
+class TestPost {
     @Test
     void testUpdatePostTitle() throws InterruptedException {
         Post post = new Post("mike","hello","world");
@@ -67,5 +62,49 @@ public class TestPost {
         tagsFalse.add("tag4");
         assertTrue(post.containsAnyTags(tagsTrue));
         assertFalse(post.containsAnyTags(tagsFalse));
+    }
+
+    @Test
+    void getCommentList(){
+        Post post = new Post("test");
+        User user = new User("author1");
+        Comment comment1 = new Comment(user,"hello");
+        Comment comment2 = new Comment(user,"world");
+        post.addComment(comment1);
+        post.addComment(comment2);
+        List<Comment> commentList = post.getComments();
+        assertEquals(comment1,commentList.get(0));
+        assertEquals(comment2,commentList.get(1));
+    }
+
+    @Test
+    void testAddReaction(){
+        Post post = new Post("test");
+        User greatUser1 = new User("great1");
+        User greatUser2 = new User("great2");
+        post.addReaction(greatUser1,ReactionType.GREAT);
+        post.addReaction(greatUser2,ReactionType.GREAT);
+        post.addReaction(greatUser2,ReactionType.GREAT);
+
+        List<User> greatReationUserList = post.getReaction(ReactionType.GREAT);
+        assertEquals(2, greatReationUserList.size());
+        assertTrue(greatReationUserList.contains(greatUser1));
+        assertTrue(greatReationUserList.contains(greatUser2));
+    }
+
+    @Test
+    void testRemoveReaction(){
+        Post post = new Post("test");
+        User greatUser1 = new User("great1");
+        User greatUser2 = new User("great2");
+        post.addReaction(greatUser1,ReactionType.GREAT);
+        post.addReaction(greatUser2,ReactionType.GREAT);
+
+        post.removeReaction(greatUser1,ReactionType.GREAT);
+
+        List<User> greatReationUserList = post.getReaction(ReactionType.GREAT);
+        assertEquals(1, greatReationUserList.size());
+        assertFalse(greatReationUserList.contains(greatUser1));
+        assertTrue(greatReationUserList.contains(greatUser2));
     }
 }

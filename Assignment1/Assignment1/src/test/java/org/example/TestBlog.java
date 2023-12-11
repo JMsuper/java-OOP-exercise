@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestBlog {
+class TestBlog {
 
     @Test
     void testCreateBlog(){
@@ -44,7 +44,7 @@ public class TestBlog {
         Post post2 = new Post("post1","hello","test Body");
         blog.addPost(post2);
 
-        ArrayList<Post> postList = blog.getPostList();
+        List<Post> postList = blog.getPostList();
         assertEquals(post1,postList.get(1));
         assertEquals(post2,postList.get(0));
     }
@@ -59,7 +59,7 @@ public class TestBlog {
         Post post2 = new Post("post1","hello","test Body");
         blog.addPost(post2);
 
-        ArrayList<Post> postList = blog.getPostList();
+        List<Post> postList = blog.getPostList();
         assertEquals(post1,postList.get(0));
         assertEquals(post2,postList.get(1));
     }
@@ -73,7 +73,7 @@ public class TestBlog {
         Post post2 = new Post("hello111","post2","test Body");
         blog.addPost(post2);
 
-        ArrayList<Post> postList = blog.getPostList();
+        List<Post> postList = blog.getPostList();
         assertEquals(post1,postList.get(1));
         assertEquals(post2,postList.get(0));
     }
@@ -88,7 +88,7 @@ public class TestBlog {
         Post post2 = new Post("post1","hello","test Body");
         blog.addPost(post2);
 
-        ArrayList<Post> postList = blog.getPostList();
+        List<Post> postList = blog.getPostList();
         assertEquals(post1,postList.get(0));
         assertEquals(post2,postList.get(1));
     }
@@ -103,7 +103,7 @@ public class TestBlog {
         Post post2 = new Post("post1","hello","test Body");
         blog.addPost(post2);
 
-        ArrayList<Post> postList = blog.getPostList();
+        List<Post> postList = blog.getPostList();
         assertEquals(post1,postList.get(1));
         assertEquals(post2,postList.get(0));
     }
@@ -151,6 +151,6 @@ public class TestBlog {
         ArrayList<Post> result = new ArrayList<>(blog.filter());
         Post postActual = result.get(0);
 
-        assertTrue(postActual == post1);
+        assertSame(postActual, post1);
     }
 }
