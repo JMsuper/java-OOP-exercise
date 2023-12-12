@@ -9,11 +9,11 @@ public class Blog {
     private HashSet<String> tagFilter;
     private HashSet<User> authorFilter;
     private PostOrderType postOrder;
-
+    private static final PostOrderType DEFAULT_POST_ORDER_TYPE = PostOrderType.CREATED_DESC;
 
     // Constructor
     public Blog(){
-        this.postOrder = PostOrderType.CREATED_DESC;
+        this.postOrder = DEFAULT_POST_ORDER_TYPE;
         this.posts = new HashSet<>();
     }
 
@@ -95,7 +95,7 @@ public class Blog {
         }
     }
 
-    public boolean isPostListContain(Post post){
+    public boolean isPostListContains(Post post){
         return posts.contains(post);
     }
 

@@ -2,32 +2,30 @@ package org.example;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import java.util.List;
 
 class TestComment {
     @Test
     void testUpdateContent(){
-        Comment comment = new Comment(new User("test"),"test");
-        comment.updateContent("hello");
-        Assertions.assertEquals("hello",comment.getBody());
+        Comment comment = new Comment(new User("name"),"Old content");
+        comment.updateContent("New content");
+        Assertions.assertEquals("New content",comment.getBody());
     }
 
     @Test
     void testAddSubComment(){
-        Comment comment = new Comment(new User("test"),"test");
-        Comment subComment = new Comment(new User("test2"),"subComment");
+        Comment comment = new Comment(new User("name1"),"content");
+        Comment subComment = new Comment(new User("name2"),"content");
         comment.addSubComment(subComment);
-        List<Comment> subCommentList = comment.getSubComments();
-        Assertions.assertEquals("subComment",subCommentList.get(0).getBody());
+
+        Assertions.assertTrue(comment.getSubComments().contains(subComment));
     }
 
     @Test
     void testAddUpVoter(){
-        Comment comment = new Comment(new User("test"),"test");
+        Comment comment = new Comment(new User("name"),"content");
         User upvoter = new User("upvoter");
         comment.addUpvoter(upvoter);
-        List<User> upvoters = comment.getUpvoters();
-        Assertions.assertEquals(upvoter,upvoters.get(0));
-    }
 
+        Assertions.assertTrue(comment.getUpvoters().contains(upvoter));
+    }
 }

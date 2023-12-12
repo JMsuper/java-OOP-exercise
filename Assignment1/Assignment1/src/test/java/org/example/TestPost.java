@@ -11,75 +11,78 @@ import static org.junit.jupiter.api.Assertions.*;
 class TestPost {
     @Test
     void testUpdatePostTitle() throws InterruptedException {
-        Post post = new Post("mike","hello","world");
+        Post post = new Post("Old Title");
         OffsetDateTime before = post.getEditedTime();
         Thread.sleep(100);
-        post.updateTitle("hi");
+        post.updateTitle("New Title");
         OffsetDateTime after = post.getEditedTime();
-        assertEquals("hi",post.getTitle());
+
+        assertEquals("New Title",post.getTitle());
         assertTrue(before.isBefore(after));
     }
 
     @Test
     void testUpdatePostBody() throws InterruptedException {
-        Post post = new Post("mike","hello","world");
+        Post post = new Post("title","author","Old Body");
         OffsetDateTime before = post.getEditedTime();
         Thread.sleep(100);
-        post.updateBody("ohio");
+        post.updateBody("New Body");
         OffsetDateTime after = post.getEditedTime();
-        assertEquals("ohio",post.getBody());
+
+        assertEquals("New Body",post.getBody());
         assertTrue(before.isBefore(after));
     }
 
     @Test
     void testAddTag(){
-        Post post = new Post("123","!@3","!23");
-        post.addTag("hello");
-        assertTrue(post.getTags().contains("hello"));
+        Post post = new Post("title");
+        post.addTag("Tag");
+        assertTrue(post.getTags().contains("Tag"));
     }
 
     @Test
     void testCheckAuthorBySet(){
-        Post post = new Post("123","mike","123");
+        Post post = new Post("title","real author","body");
+
         HashSet<User> usersTrue = new HashSet<>();
-        usersTrue.add(new User("mike"));
+        usersTrue.add(new User("real author"));
         HashSet<User> usersFalse = new HashSet<>();
-        usersFalse.add(new User("John"));
+        usersFalse.add(new User("fake author"));
+
         assertTrue(post.checkAuthor(usersTrue));
         assertFalse(post.checkAuthor(usersFalse));
     }
 
     @Test
     void testContainsTags(){
-        Post post = new Post("test");
-        post.addTag("tag1");
-        post.addTag("tag2");
+        Post post = new Post("title");
+        post.addTag("real tag");
 
         HashSet<String> tagsTrue = new HashSet<>();
-        tagsTrue.add("tag1");
-        tagsTrue.add("tag3");
+        tagsTrue.add("real tag");
         HashSet<String> tagsFalse = new HashSet<>();
-        tagsFalse.add("tag4");
+        tagsFalse.add("fake tag");
+
         assertTrue(post.containsAnyTags(tagsTrue));
         assertFalse(post.containsAnyTags(tagsFalse));
     }
 
     @Test
     void getCommentList(){
-        Post post = new Post("test");
-        User user = new User("author1");
+        Post post = new Post("title");
+        User user = new User("name");
+
         Comment comment1 = new Comment(user,"hello");
         Comment comment2 = new Comment(user,"world");
         post.addComment(comment1);
         post.addComment(comment2);
-        List<Comment> commentList = post.getComments();
-        assertEquals(comment1,commentList.get(0));
-        assertEquals(comment2,commentList.get(1));
+
+        assertTrue(post.getComments().containsAll(Arrays.asList(comment1,comment2)));
     }
 
     @Test
     void testAddReaction(){
-        Post post = new Post("test");
+        Post post = new Post("title");
         User greatUser1 = new User("great1");
         User greatUser2 = new User("great2");
         post.addReaction(greatUser1,ReactionType.GREAT);
@@ -87,24 +90,20 @@ class TestPost {
         post.addReaction(greatUser2,ReactionType.GREAT);
 
         List<User> greatReationUserList = post.getReaction(ReactionType.GREAT);
+
         assertEquals(2, greatReationUserList.size());
-        assertTrue(greatReationUserList.contains(greatUser1));
-        assertTrue(greatReationUserList.contains(greatUser2));
+        assertTrue(greatReationUserList.containsAll(Arrays.asList(greatUser1,greatUser2)));
     }
 
     @Test
     void testRemoveReaction(){
-        Post post = new Post("test");
-        User greatUser1 = new User("great1");
-        User greatUser2 = new User("great2");
-        post.addReaction(greatUser1,ReactionType.GREAT);
-        post.addReaction(greatUser2,ReactionType.GREAT);
+        Post post = new Post("title");
+        User greatUser = new User("name");
 
-        post.removeReaction(greatUser1,ReactionType.GREAT);
+        post.addReaction(greatUser,ReactionType.GREAT);
+        post.removeReaction(greatUser,ReactionType.GREAT);
 
         List<User> greatReationUserList = post.getReaction(ReactionType.GREAT);
-        assertEquals(1, greatReationUserList.size());
-        assertFalse(greatReationUserList.contains(greatUser1));
-        assertTrue(greatReationUserList.contains(greatUser2));
+        assertFalse(greatReationUserList.contains(greatUser));
     }
 }

@@ -7,15 +7,15 @@ public class Comment {
 
     // member variable
     private final User author;
-    private String body;
+    private String content;
     private final ArrayList<Comment> subComments;
     private final ArrayList<User> upvoters;
     private final ArrayList<User> downvoters;
 
     // Constructor
-    public Comment(User author, String body){
+    public Comment(User author, String content){
         this.author = author;
-        this.body = body;
+        this.content = content;
         this.subComments = new ArrayList<>();
         this.upvoters = new ArrayList<>();
         this.downvoters = new ArrayList<>();
@@ -23,7 +23,7 @@ public class Comment {
 
     // Method
     public String getBody() {
-        return body;
+        return content;
     }
 
     public List<Comment> getSubComments() {
@@ -39,7 +39,7 @@ public class Comment {
     }
 
     public void updateContent(String content){
-        this.body = content;
+        this.content = content;
     }
 
     public void addSubComment(Comment subComment){

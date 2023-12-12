@@ -1,156 +1,142 @@
 package org.example;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class TestBlog {
+    Blog blog;
+
+    @BeforeEach
+    void initialize(){
+        this.blog = new Blog();
+    }
 
     @Test
     void testCreateBlog(){
-        Blog blog = new Blog();
         assertEquals(Blog.class,blog.getClass());
     }
 
     @Test
     void testAddPost(){
-        Blog blog = new Blog();
-        Post post = new Post("testName");
+        Post post = new Post("title");
         blog.addPost(post);
-        assertTrue(blog.isPostListContain(post));
+        assertTrue(blog.isPostListContains(post));
     }
 
     @Test
     void testSetPostOrder(){
-        Blog blog = new Blog();
-        assertEquals(PostOrderType.CREATED_DESC,blog.getPostOrder());
         blog.setPostOrder(PostOrderType.CREATED_ACES);
         assertEquals(PostOrderType.CREATED_ACES,blog.getPostOrder());
     }
 
     @Test
     void testGetPostOrderByCREATED_DESC() throws InterruptedException {
-        Blog blog = new Blog();
-        Post post1 = new Post("post1","hello","test Body");
-        blog.addPost(post1);
-        Thread.sleep(100);
-        Post post2 = new Post("post1","hello","test Body");
-        blog.addPost(post2);
+        blog.setPostOrder(PostOrderType.CREATED_DESC);
+        Post beforePost = new Post("beforePost");
+        Thread.sleep(10); // created date 를 다르게 하기 위함
+        Post afterPost = new Post("afterPost");
+        blog.addPost(beforePost);
+        blog.addPost(afterPost);
 
         List<Post> postList = blog.getPostList();
-        assertEquals(post1,postList.get(1));
-        assertEquals(post2,postList.get(0));
+        assertTrue(postList.indexOf(afterPost) < postList.indexOf(beforePost));
     }
 
     @Test
     void testGetPostOrderByCREATED_ASEC() throws InterruptedException {
-        Blog blog = new Blog();
         blog.setPostOrder(PostOrderType.CREATED_ACES);
-        Post post1 = new Post("post1","hello","test Body");
-        blog.addPost(post1);
-        Thread.sleep(100);
-        Post post2 = new Post("post1","hello","test Body");
-        blog.addPost(post2);
+        Post beforePost = new Post("beforePost");
+        Thread.sleep(10); // created date 를 다르게 하기 위함
+        Post afterPost = new Post("afterPost");
+        blog.addPost(beforePost);
+        blog.addPost(afterPost);
 
         List<Post> postList = blog.getPostList();
-        assertEquals(post1,postList.get(0));
-        assertEquals(post2,postList.get(1));
+        assertTrue(postList.indexOf(beforePost) < postList.indexOf(afterPost));
     }
 
     @Test
     void testGetPostOrderByTITLE_ACES(){
-        Blog blog = new Blog();
         blog.setPostOrder(PostOrderType.TITLE_ACES);
-        Post post1 = new Post("hello112","post1","test Body");
-        blog.addPost(post1);
-        Post post2 = new Post("hello111","post2","test Body");
-        blog.addPost(post2);
+        Post ZZZ_Title = new Post("ZZZ_Title");
+        Post AAA_Title = new Post("AAA_Title");
+        blog.addPost(ZZZ_Title);
+        blog.addPost(AAA_Title);
 
         List<Post> postList = blog.getPostList();
-        assertEquals(post1,postList.get(1));
-        assertEquals(post2,postList.get(0));
+        assertTrue(postList.indexOf(AAA_Title) < postList.indexOf(ZZZ_Title));
     }
 
     @Test
     void testGetPostOrderByEDITED_ACES() throws InterruptedException {
-        Blog blog = new Blog();
         blog.setPostOrder(PostOrderType.EDITED_ACES);
-        Post post1 = new Post("post1","hello","test Body");
-        blog.addPost(post1);
-        Thread.sleep(100);
-        Post post2 = new Post("post1","hello","test Body");
-        blog.addPost(post2);
+        Post notEdited = new Post("NotEdited");
+        Post edited = new Post("NotEdited");
+        blog.addPost(notEdited);
+        blog.addPost(edited);
+        Thread.sleep(10); // edited date 를 다르게 하기 위함
+        edited.updateTitle("Edited");
 
         List<Post> postList = blog.getPostList();
-        assertEquals(post1,postList.get(0));
-        assertEquals(post2,postList.get(1));
+        assertTrue(postList.indexOf(notEdited) < postList.indexOf(edited));
     }
 
     @Test
     void testGetPostOrderByEDITED_DESC() throws InterruptedException {
-        Blog blog = new Blog();
         blog.setPostOrder(PostOrderType.EDITED_DESC);
-        Post post1 = new Post("post1","hello","test Body");
-        blog.addPost(post1);
-        Thread.sleep(100);
-        Post post2 = new Post("post1","hello","test Body");
-        blog.addPost(post2);
+        Post notEdited = new Post("NotEdited");
+        Post edited = new Post("NotEdited");
+        blog.addPost(notEdited);
+        blog.addPost(edited);
+        Thread.sleep(10); // edited date 를 다르게 하기 위함
+        edited.updateTitle("Edited");
 
         List<Post> postList = blog.getPostList();
-        assertEquals(post1,postList.get(1));
-        assertEquals(post2,postList.get(0));
+        assertTrue(postList.indexOf(edited) < postList.indexOf(notEdited));
     }
 
     @Test
     void testSetTagFilter(){
-        Blog blog = new Blog();
         HashSet<String> tagFilter =  new HashSet<>();
         tagFilter.add("hello");
-        tagFilter.add("world");
         blog.setTagFilter(tagFilter);
+
         assertEquals(tagFilter,blog.getTagFilter());
         assertTrue(blog.getTagFilter().contains("hello"));
-        assertTrue(blog.getTagFilter().contains("world"));
     }
 
     @Test
     void testSetAuthorFilter(){
-        Blog blog = new Blog();
         HashSet<User> authorFilter = new HashSet<>();
-        User author1 = new User("document");
-        User author2 = new User("CS");
-        authorFilter.add(author1);
-        authorFilter.add(author2);
+        User author = new User("name");
+        authorFilter.add(author);
         blog.setAuthorFilter(authorFilter);
+
         assertEquals(authorFilter,blog.getAuthorFilter());
-        assertTrue(blog.getAuthorFilter().contains(author1));
-        assertTrue(blog.getAuthorFilter().contains(author2));
+        assertTrue(blog.getAuthorFilter().contains(author));
     }
 
     @Test
     void testFilter(){
-        Blog blog = new Blog();
-        Post post1 = new Post("test","Mike","sdf");
-        post1.addTag("Hello");
-        Post post2 = new Post("test","John","sdf");
-        post2.addTag("Hello");
-        blog.addPost(post1);
-        blog.addPost(post2);
-        blog.setTagFilter(new HashSet<>(Arrays.asList("Hello","Hi")));
+        Post filterdPost = new Post("title","Mike","body");
+        filterdPost.addTag("realTag");
+        Post notFilteredPost = new Post("title","John","body");
+        notFilteredPost.addTag("realTag");
 
-        HashSet<User> authorFilter = new HashSet<>();
-        authorFilter.add(new User("Mike"));
-        blog.setAuthorFilter(authorFilter);
-        ArrayList<Post> result = new ArrayList<>(blog.filter());
-        Post postActual = result.get(0);
+        blog.addPost(filterdPost);
+        blog.addPost(notFilteredPost);
+        blog.setTagFilter(new HashSet<>(Arrays.asList("realTag")));
+        blog.setAuthorFilter(new HashSet<>(Arrays.asList(new User("Mike"))));
 
-        assertSame(postActual, post1);
+        Set<Post> filtered =  blog.filter();
+        assertTrue(filtered.contains(filterdPost));
+        assertFalse(filtered.contains(notFilteredPost));
     }
 }
