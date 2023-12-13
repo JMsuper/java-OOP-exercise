@@ -8,11 +8,10 @@ import java.util.ArrayList;
 public class Program {
 
     public static void main(String[] args) {
-//        testOfficial();
-//        testManyCaches();
+        testOfficial();
+        testManyCaches();
         testManyEntry();
-//
-//        testTime();
+        testTime();
 
         System.out.println("No prob");
     }

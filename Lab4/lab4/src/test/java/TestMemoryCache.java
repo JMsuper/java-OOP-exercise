@@ -2,19 +2,21 @@ import org.example.MemoryCache;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestMemoryCache {
+class TestMemoryCache {
 
     // MethodName_StateUnderTest_ExpectedBehavior
     @Test
     void getInstance_newKeyAndNotFull_insertObject(){
+        MemoryCache.setMaxInstanceCount(3);
         String newKey = "A";
         MemoryCache memoryCacheFromMap = MemoryCache.getInstance(newKey);
 
-        LinkedList<String> memoryCacheLruList = MemoryCache.getMemoryCacheLruList();
-        String keyFromList = memoryCacheLruList.getFirst();
+        List<String> memoryCacheLruList = (LinkedList<String>) MemoryCache.getCacheLRUList();
+        String keyFromList = memoryCacheLruList.get(0);
 
         assertEquals(newKey,memoryCacheFromMap.getKey());
         assertEquals(newKey,keyFromList);
@@ -22,13 +24,14 @@ public class TestMemoryCache {
 
     @Test
     void getInstance_newKeyAndFull_removeAndInsert(){
+        MemoryCache.setMaxInstanceCount(3);
         MemoryCache.getInstance("A");
         MemoryCache.getInstance("B");
         MemoryCache.getInstance("A");
         MemoryCache.getInstance("C");
 
         MemoryCache.getInstance("D");
-        assertEquals("D",MemoryCache.getMemoryCacheLruList().getFirst());
+        assertEquals("D",MemoryCache.getCacheLRUList().get(0));
         assertTrue(MemoryCache.getInstanceMap().containsKey("A"));
         assertFalse(MemoryCache.getInstanceMap().containsKey("B"));
     }
@@ -42,6 +45,6 @@ public class TestMemoryCache {
 
         MemoryCache.setMaxInstanceCount(2);
         assertFalse(MemoryCache.getInstanceMap().containsKey("B"));
-        assertEquals(2,MemoryCache.getMemoryCacheLruList().size());
+        assertEquals(2,MemoryCache.getCacheLRUList().size());
     }
 }
