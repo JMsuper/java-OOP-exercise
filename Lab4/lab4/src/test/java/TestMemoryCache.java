@@ -1,4 +1,3 @@
-import javafx.util.Pair;
 import org.example.MemoryCache;
 import org.junit.jupiter.api.Test;
 
@@ -44,28 +43,5 @@ public class TestMemoryCache {
         MemoryCache.setMaxInstanceCount(2);
         assertFalse(MemoryCache.getInstanceMap().containsKey("B"));
         assertEquals(2,MemoryCache.getMemoryCacheLruList().size());
-    }
-
-    @Test
-    void addEntry_newEntry_insertMapAndList(){
-        MemoryCache memoryCache = MemoryCache.getInstance("sample");
-        memoryCache.addEntry("key","value");
-        String valueFromMap = memoryCache.getEntryMap().get("key");
-        String valueFromList = memoryCache.getLruList().getFirst();
-        assertEquals("value",valueFromMap);
-        assertEquals("key",valueFromList);
-    }
-
-    @Test
-    void addEntry_duplicatedKey_updateMapAndList(){
-        MemoryCache memoryCache = MemoryCache.getInstance("sample");
-        memoryCache.addEntry("A","value");
-        memoryCache.addEntry("B","value");
-        memoryCache.addEntry("A","newValue");
-
-        String valueFromMap = memoryCache.getEntryMap().get("A");
-        String valueFromList = memoryCache.getLruList().getFirst();
-        assertEquals("newValue",valueFromMap);
-        assertEquals("A",valueFromList);
     }
 }

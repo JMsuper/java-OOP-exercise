@@ -1,16 +1,14 @@
 package org.example;
 
-
-import javafx.util.Pair;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 
 public class MemoryCache {
 
     // static
-    private static int DEFAULT_LIMIT = 3;
-    private static int maxInstanceCount = DEFAULT_LIMIT;
+    private static int DEFAULT_CACHE_LIMIT = 10;
+    private static int DEFAULT_ENTRY_LIMIT = 100000;
+    private static int maxInstanceCount = DEFAULT_CACHE_LIMIT;
     private static HashMap<String, MemoryCache> instanceMap = new HashMap<>();
     private static LinkedList<String> memoryCacheLruList = new LinkedList<>();
 
@@ -54,6 +52,7 @@ public class MemoryCache {
     public static void clear(){
         instanceMap = new HashMap<>();
         memoryCacheLruList = new LinkedList<>();
+        maxInstanceCount = DEFAULT_CACHE_LIMIT;
     }
 
 
@@ -63,14 +62,15 @@ public class MemoryCache {
         this.key = key;
         this.entryMap = new HashMap<>();
         this.lruList = new LinkedList<>();
-        this.maxEntryCount = DEFAULT_LIMIT;
+        this.orderList = new LinkedList<>();
+        this.maxEntryCount = DEFAULT_ENTRY_LIMIT;
         this.evictionPolicy = EvictionPolicy.LEAST_RECENTLY_USED;
     }
 
-    private String key;
-    private HashMap<String,String> entryMap;
-    // Pair<Key, Value>
-    private LinkedList<String> lruList;
+    private final String key;
+    private final HashMap<String,String> entryMap;
+    private final LinkedList<String> lruList;
+    private final LinkedList<String> orderList;
     private int maxEntryCount;
     private EvictionPolicy evictionPolicy;
 
@@ -78,41 +78,85 @@ public class MemoryCache {
         return key;
     }
 
-    public LinkedList<String> getLruList() {
-        return lruList;
-    }
-
-    public HashMap<String, String> getEntryMap() {
-        return entryMap;
-    }
-
     public void addEntry(String key, String value){
+        // 이미 있는 경우
         if(entryMap.containsKey(key)){
-            String oldValue = entryMap.replace(key,value);
-            lruList.remove(new Pair<>(key,oldValue));
-            lruList.addFirst(key);
+            entryMap.replace(key,value);
+            // LRU 적용
+            lruList.remove(key);
+            lruList.addLast(key);
             return;
         }
-        if(maxEntryCount == lruList.size()){
-            String removed = lruList.removeLast();
-            entryMap.remove(removed);
+
+        // 꽉차 있는데 추가하는 경우
+        if(entryMap.size() == maxEntryCount){
+            // 지우기 정책
+            String removedKey = null;
+            switch (evictionPolicy){
+                case LEAST_RECENTLY_USED:
+                    removedKey = lruList.removeFirst();
+                    orderList.remove(removedKey);
+                    break;
+                case FIRST_IN_FIRST_OUT:
+                    removedKey = orderList.removeFirst();
+                    lruList.remove(removedKey);
+                    break;
+                case LAST_IN_FIRST_OUT:
+                    removedKey = orderList.removeLast();
+                    lruList.remove(removedKey);
+                    break;
+                default:
+                    assert false : "not allowed eviction policy";
+            }
+            entryMap.remove(removedKey);
         }
+
+        // 널널할 경우
         entryMap.put(key,value);
-        lruList.addFirst(key);
+        lruList.addLast(key);
+        orderList.addLast(key);
+
+        assert entryMap.size() == lruList.size();
+        assert lruList.size() == orderList.size();
     }
 
     public void setMaxEntryCount(int count){
-        if(count < this.maxEntryCount){
-            while(lruList.size() > count){
-                String removed = lruList.removeLast();
-                instanceMap.remove(removed);
+        if(count < maxEntryCount){
+            while(entryMap.size() > count){
+                String removedKey = null;
+                switch (evictionPolicy){
+                    case LEAST_RECENTLY_USED:
+                        removedKey = lruList.removeFirst();
+                        orderList.remove(removedKey);
+                        break;
+                    case FIRST_IN_FIRST_OUT:
+                        removedKey = orderList.removeFirst();
+                        lruList.remove(removedKey);
+                        break;
+                    case LAST_IN_FIRST_OUT:
+                        removedKey = orderList.removeLast();
+                        lruList.remove(removedKey);
+                        break;
+                    default:
+                        assert false : "not allowed eviction policy";
+                }
+                entryMap.remove(removedKey);
             }
         }
-        this.maxEntryCount = count;
+        maxEntryCount = count;
     }
 
-    public String getEntryOrNull(String key){return null;}
-//
-//    public void setEvictionPolicy(EvictionPolicy policy){}
+    public String getEntryOrNull(String key){
+        if(entryMap.containsKey(key)){
+            lruList.remove(key);
+            lruList.addLast(key);
+            return entryMap.get(key);
+        }
+        return null;
+    }
+
+    public void setEvictionPolicy(EvictionPolicy policy){
+        evictionPolicy = policy;
+    }
 
 }
