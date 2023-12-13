@@ -12,28 +12,28 @@ public class MemoryCache {
     private static int DEFAULT_LIMIT = 3;
     private static int maxInstanceCount = DEFAULT_LIMIT;
     private static HashMap<String, MemoryCache> instanceMap = new HashMap<>();
-    private static LinkedList<MemoryCache> memoryCacheLruList = new LinkedList<>();
+    private static LinkedList<String> memoryCacheLruList = new LinkedList<>();
 
     // MemoryCache 는 LRU 정책을 따름
     public static MemoryCache getInstance(String key){
         if(instanceMap.containsKey(key)){
             MemoryCache returnCache = instanceMap.get(key);
-            memoryCacheLruList.remove(returnCache);
-            memoryCacheLruList.addFirst(returnCache);
+            memoryCacheLruList.remove(key);
+            memoryCacheLruList.addFirst(key);
             return returnCache;
         }
         if(instanceMap.keySet().size() >= maxInstanceCount){
-            MemoryCache removed = memoryCacheLruList.removeLast();
-            instanceMap.remove(removed.key);
+            String removed = memoryCacheLruList.removeLast();
+            instanceMap.remove(removed);
         }
         MemoryCache newMemoryCache = new MemoryCache(key);
         instanceMap.put(key,newMemoryCache);
-        memoryCacheLruList.addFirst(newMemoryCache);
+        memoryCacheLruList.addFirst(key);
 
         return instanceMap.get(key);
     }
 
-    public static LinkedList<MemoryCache> getMemoryCacheLruList() {
+    public static LinkedList<String> getMemoryCacheLruList() {
         return memoryCacheLruList;
     }
 
@@ -44,10 +44,11 @@ public class MemoryCache {
     public static void setMaxInstanceCount(int count){
         if(count < maxInstanceCount){
             while(memoryCacheLruList.size() > count){
-                MemoryCache removed = memoryCacheLruList.removeLast();
-                instanceMap.remove(removed.key);
+                String removed = memoryCacheLruList.removeLast();
+                instanceMap.remove(removed);
             }
         }
+        maxInstanceCount = count;
     }
 
     public static void clear(){
@@ -69,7 +70,7 @@ public class MemoryCache {
     private String key;
     private HashMap<String,String> entryMap;
     // Pair<Key, Value>
-    private LinkedList<Pair<String,String>> lruList;
+    private LinkedList<String> lruList;
     private int maxEntryCount;
     private EvictionPolicy evictionPolicy;
 
@@ -77,7 +78,7 @@ public class MemoryCache {
         return key;
     }
 
-    public LinkedList<Pair<String, String>> getLruList() {
+    public LinkedList<String> getLruList() {
         return lruList;
     }
 
@@ -89,18 +90,26 @@ public class MemoryCache {
         if(entryMap.containsKey(key)){
             String oldValue = entryMap.replace(key,value);
             lruList.remove(new Pair<>(key,oldValue));
-            lruList.addFirst(new Pair<>(key,value));
+            lruList.addFirst(key);
             return;
         }
         if(maxEntryCount == lruList.size()){
-            Pair<String,String> removed = lruList.removeLast();
-            entryMap.remove(removed.getKey());
+            String removed = lruList.removeLast();
+            entryMap.remove(removed);
         }
         entryMap.put(key,value);
-        lruList.addFirst(new Pair<>(key,value));
+        lruList.addFirst(key);
     }
 
-    public void setMaxEntryCount(int cnt){}
+    public void setMaxEntryCount(int count){
+        if(count < this.maxEntryCount){
+            while(lruList.size() > count){
+                String removed = lruList.removeLast();
+                instanceMap.remove(removed);
+            }
+        }
+        this.maxEntryCount = count;
+    }
 
     public String getEntryOrNull(String key){return null;}
 //

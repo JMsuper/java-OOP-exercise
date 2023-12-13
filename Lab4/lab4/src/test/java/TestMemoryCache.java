@@ -14,11 +14,11 @@ public class TestMemoryCache {
         String newKey = "A";
         MemoryCache memoryCacheFromMap = MemoryCache.getInstance(newKey);
 
-        LinkedList<MemoryCache> memoryCacheLruList = MemoryCache.getMemoryCacheLruList();
-        MemoryCache memoryCacheFromList = memoryCacheLruList.getFirst();
+        LinkedList<String> memoryCacheLruList = MemoryCache.getMemoryCacheLruList();
+        String keyFromList = memoryCacheLruList.getFirst();
 
         assertEquals(newKey,memoryCacheFromMap.getKey());
-        assertEquals(memoryCacheFromMap,memoryCacheFromList);
+        assertEquals(newKey,keyFromList);
     }
 
     @Test
@@ -29,7 +29,7 @@ public class TestMemoryCache {
         MemoryCache.getInstance("C");
 
         MemoryCache.getInstance("D");
-        assertEquals("D",MemoryCache.getMemoryCacheLruList().getFirst().getKey());
+        assertEquals("D",MemoryCache.getMemoryCacheLruList().getFirst());
         assertTrue(MemoryCache.getInstanceMap().containsKey("A"));
         assertFalse(MemoryCache.getInstanceMap().containsKey("B"));
     }
@@ -51,9 +51,9 @@ public class TestMemoryCache {
         MemoryCache memoryCache = MemoryCache.getInstance("sample");
         memoryCache.addEntry("key","value");
         String valueFromMap = memoryCache.getEntryMap().get("key");
-        Pair<String,String> valueFromList = memoryCache.getLruList().getFirst();
+        String valueFromList = memoryCache.getLruList().getFirst();
         assertEquals("value",valueFromMap);
-        assertEquals(new Pair("key","value"),valueFromList);
+        assertEquals("key",valueFromList);
     }
 
     @Test
@@ -64,8 +64,8 @@ public class TestMemoryCache {
         memoryCache.addEntry("A","newValue");
 
         String valueFromMap = memoryCache.getEntryMap().get("A");
-        Pair<String,String> valueFromList = memoryCache.getLruList().getFirst();
+        String valueFromList = memoryCache.getLruList().getFirst();
         assertEquals("newValue",valueFromMap);
-        assertEquals(new Pair("A","newValue"),valueFromList);
+        assertEquals("A",valueFromList);
     }
 }
