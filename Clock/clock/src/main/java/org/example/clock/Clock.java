@@ -2,8 +2,8 @@ package org.example.clock;
 
 public class Clock {
     // 12 hour standard
-    private static int MAX_SECONDS = 12 * 60 * 60;
-    private int seconds;
+    protected static int MAX_SECONDS = 24 * 60 * 60;
+    protected int seconds;
 
     public Clock(){
         this.seconds = 0;
@@ -19,7 +19,13 @@ public class Clock {
 
     public int getHours(){
         int hours = this.seconds / 3600;
+        hours = hours % 12;
         return hours == 0 ? 12 : hours;
+    }
+
+    public void tick(){
+        int newSeconds = this.seconds + 1;
+        this.seconds = newSeconds % MAX_SECONDS;
     }
 
     public void addSeconds(int seconds){
@@ -28,23 +34,6 @@ public class Clock {
             newSeconds += MAX_SECONDS;
         }
         this.seconds = newSeconds % MAX_SECONDS;
-    }
-
-    public double getSecondHandAngle(){
-        return getSeconds() * (360 / 60);
-    }
-
-    public double getMinuteHandAngle(){
-        return Math.round((360.0 / (60 * 60)) * 100 * (seconds % 3600)) / 100.0;
-    }
-
-    public double getHourHandAngle(){
-        return  Math.round((360.0 / MAX_SECONDS) * 100 * seconds) / 100.0;
-    }
-
-
-    public void tick(){
-        addSeconds(1);
     }
 
     public void mount(){
