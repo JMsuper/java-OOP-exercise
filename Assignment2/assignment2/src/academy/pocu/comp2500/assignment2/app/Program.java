@@ -4,6 +4,8 @@ import academy.pocu.comp2500.assignment2.*;
 import academy.pocu.comp2500.assignment2.registry.Registry;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Program {
     public static void main(String[] args) {
@@ -11,46 +13,61 @@ public class Program {
 //        App app = new App(registry);
 //        registry.validate();
 
-        testStamp();
+//        testStamp();
 //        testBusinessCard();
 //        testCart();
 //        testAddApertures();
 
         System.out.println("No prob");
+
+        HashClass h1 = new HashClass(1,"hello");
+        HashClass h2 = new HashClass(2,"world");
+        HashClass h3 = new HashClass(2,"wow");
+
+        Map<HashClass,String> map = new HashMap<>();
+        map.put(h1, "h1");
+        map.put(h2, "h2");
+        map.put(h3, "h3");
+
+        System.out.println(map.get(h1));
+        System.out.println(map.get(h2));
+        String h3Value = map.get(h3);
+        System.out.println(h3Value);
+
     }
 
-    private static void testStamp() {
-        Stamp stamp0 = new Stamp(StampSize.SMALL, Color.RED, "Stamp0");
-        Stamp stamp1 = new Stamp(StampSize.MEDIUM, Color.BLUE, "Stamp1");
-        Stamp stamp2 = new Stamp(StampSize.LARGE, Color.GREEN, "Stamp2");
-
-        assert stamp0.getWidth() == 40;
-        assert stamp0.getHeight() == 30;
-        assert stamp0.getDisplayName().equals("Stamp (40 mm x 30 mm)");
-        assert stamp0.getPrice() == 2300;
-        assert stamp0.getText().equals("Stamp0");
-        assert stamp0.getDeliveryType() == DeliveryMethod.PICKUP;
-        stamp0.setDeliveryType(DeliveryMethod.SHIP);
-        assert stamp0.getDeliveryType() == DeliveryMethod.SHIP;
-
-        assert stamp1.getWidth() == 50;
-        assert stamp1.getHeight() == 20;
-        assert stamp1.getDisplayName().equals("Stamp (50 mm x 20 mm)");
-        assert stamp1.getPrice() == 2300;
-        assert stamp1.getText().equals("Stamp1");
-        assert stamp1.getDeliveryType() == DeliveryMethod.PICKUP;
-        stamp1.setDeliveryType(DeliveryMethod.SHIP);
-        assert stamp1.getDeliveryType() == DeliveryMethod.SHIP;
-
-        assert stamp2.getWidth() == 70;
-        assert stamp2.getHeight() == 40;
-        assert stamp2.getDisplayName().equals("Stamp (70 mm x 40 mm)");
-        assert stamp2.getPrice() == 2600;
-        assert stamp2.getText().equals("Stamp2");
-        assert stamp2.getDeliveryType() == DeliveryMethod.PICKUP;
-        stamp2.setDeliveryType(DeliveryMethod.SHIP);
-        assert stamp2.getDeliveryType() == DeliveryMethod.SHIP;
-    }
+//    private static void testStamp() {
+//        Stamp stamp0 = new Stamp(StampSize.SMALL, Color.RED, "Stamp0");
+//        Stamp stamp1 = new Stamp(StampSize.MEDIUM, Color.BLUE, "Stamp1");
+//        Stamp stamp2 = new Stamp(StampSize.LARGE, Color.GREEN, "Stamp2");
+//
+//        assert stamp0.getWidth() == 40;
+//        assert stamp0.getHeight() == 30;
+//        assert stamp0.getDisplayName().equals("Stamp (40 mm x 30 mm)");
+//        assert stamp0.getPrice() == 2300;
+//        assert stamp0.getText().equals("Stamp0");
+//        assert stamp0.getDeliveryType() == DeliveryMethod.PICKUP;
+//        stamp0.setDeliveryType(DeliveryMethod.SHIP);
+//        assert stamp0.getDeliveryType() == DeliveryMethod.SHIP;
+//
+//        assert stamp1.getWidth() == 50;
+//        assert stamp1.getHeight() == 20;
+//        assert stamp1.getDisplayName().equals("Stamp (50 mm x 20 mm)");
+//        assert stamp1.getPrice() == 2300;
+//        assert stamp1.getText().equals("Stamp1");
+//        assert stamp1.getDeliveryType() == DeliveryMethod.PICKUP;
+//        stamp1.setDeliveryType(DeliveryMethod.SHIP);
+//        assert stamp1.getDeliveryType() == DeliveryMethod.SHIP;
+//
+//        assert stamp2.getWidth() == 70;
+//        assert stamp2.getHeight() == 40;
+//        assert stamp2.getDisplayName().equals("Stamp (70 mm x 40 mm)");
+//        assert stamp2.getPrice() == 2600;
+//        assert stamp2.getText().equals("Stamp2");
+//        assert stamp2.getDeliveryType() == DeliveryMethod.PICKUP;
+//        stamp2.setDeliveryType(DeliveryMethod.SHIP);
+//        assert stamp2.getDeliveryType() == DeliveryMethod.SHIP;
+//    }
 
 //    private static void testBusinessCard() {
 //        BusinessCard businessCard0 = new BusinessCard(PaperType.LAID, SideType.SINGLE, Orientation.PORTRAIT, Color.IVORY);
