@@ -1,7 +1,7 @@
 package pattern;
 
 
-import pattern.builder.example.documentation.Run;
+import pattern.chainofresponsibility.Run;
 
 public class Main {
     public static void main(String[] args) {
